@@ -1,11 +1,10 @@
 # GeoInterface v1.0 RFC
 
-* Title: An Interface for Geospatial Geometries in Julia
-* Author: Yeesian Ng ngyeesian@gmail.com
-* Created: October 2019
-* Status: **Draft** | In Review | Work In Progress | Completed
-* Review Requested
-    - [ ] visr
+* **Title**: An Interface for Geospatial Geometries in Julia
+* **Authors**: Martijn Visser (mgvisser@gmail.com) and Yeesian Ng (ngyeesian@gmail.com)
+* **Created**: October 2019
+* **Status**: **Draft** | In Review | Work In Progress | Completed
+* **Review Requested**:
     - [ ] evetion
     - [ ] meggart
     - [ ] rafaqz
@@ -55,6 +54,8 @@ MultiPolygon <: Geometry,
 GeometryCollection <: Geometry
 ```
 
+> What do we do with the null geometries / missing geometries?
+
 (c) implementation for AbstractVectors and Tuples
 
 ## For developers looking to implement the interface
@@ -77,7 +78,7 @@ A geom with "Polygon"-like traits has to implement the following methods:
 ```julia
 GeoInterface.geomtype(polygon) = GeoInterface.Polygon()
 GeoInterface.ncoord(polygon)::Integer
-GeoInterface.getexterior(polygon)::LineString
+GeoInterface.getexterior(polygon)::"LineString"
 GeoInterface.nhole(polygon)::Integer
 GeoInterface.gethole(polygon, i)::"LineString"
 ```
@@ -110,15 +111,20 @@ GeoInterface.npolygon(multipolygon)::Integer
 GeoInterface.getpolygon(multipolygon, i)::"Polygon"
 ```
 
+> Should we distinguish `npolygon`, `nlinestring`, `npoint`, `ngeom`, or collect in `ngeom`? Same for `getpoint`, `getlinestring`, `getpolygon` versus `getgeom`.
+>
+> Requiring the `getgeom` (and similar) methods seems to imply that these collections must be indexable as opposed to just iterable. Should we require them at least to be iterable, and only optionally indexable?
+
 ## Dispatching on geomtype()
+
 As there are a wide number of methods (qualified and unqualified), for every
 unqualified function call, GeoInterface dispatches to the corresponding qualified
-function based on the geomtype() of the input geometry. Therefore, unqualified
-function calls for geometries of undefined geomtype() will result in error.
+function based on the `geomtype()` of the input geometry. Therefore, unqualified
+function calls for geometries of undefined `geomtype()` will result in error.
 
 In such cases, its `geomtype()` might be undefined, but knowledge of the data type
 itself might be sufficient for the user to know which GeoInterface.jl methods
-are supported for the data type. For example, a Vector{Tuple{Int,Int}} can behave
+are supported for the data type. For example, a `Vector{Tuple{Int,Int}}` can behave
 like a Polygon, LineString, or MultiPoint. In such situations, the qualified use
 of GeoInterface methods should still be legal.
 
@@ -170,6 +176,7 @@ GeoInterface.geomtype(geom::Tuple{T,U}) where {T,U <: Real} =
 GeoInterface.geomtype(geom::Tuple{T,U,V}) where {T,U,V <: Real} =
     GeoInterface.Point()
 
+# misses the Real eltype requirement, also below
 function GeoInterface.ncoord(
         GeoInterface.Point,
         geom::Union{AbstractVector, Tuple}
@@ -214,6 +221,7 @@ function GeoInterface.ncoord(
         GeoInterface.Polygon,
         geom::Union{AbstractVector, Tuple}
     )
+    # does sf also only count exterior points?
     linestring = GeoInterface.getexterior(geom)
     return GeoInterface.ncoord(GeoInterface.LineString, linestring)
 end
@@ -355,7 +363,7 @@ You can write a package that renames the functions, and export the ones you want
 Those might be more appropriate for potential packages such as "GeoTables.jl" (see [GeoJSONTables.jl](https://github.com/visr/GeoJSONTables.jl) for example), which can associate geometries with properties and metadata such as CRS and boundingboxes.
 
 # Affected Packages
-* **That should implement it**: `Shapefile`, `GeoJSON`, `ArchGDAL`, `GeometryBasics`, `LibGEOS`
+* **That should implement it**: `Shapefile`, `GeoJSON`, `ArchGDAL`, `GeometryBasics`, `LibGEOS`, `GeometryTypes`
 * **That might use it**: `GeoMakie`, `Turf` (?), `GeoTables` (?)
 
 # Some Alternatives Considered
@@ -365,6 +373,8 @@ It has never gained any traction; see the [meeting minutes](https://github.com/J
 
 ## A Type Hierarchy
 The versions of GeoInterface until v0.4. It got some traction, but has reached its limitations. 
+
+> Would be good to show some of these limitations for people that may not be convinced. Such as, treating an `AbstractVector{<:Real}` as a point is not possible, or in general extending from outside packages, because of single inheritance.
 
 # References
 This proposal has been inspired by the [Geo Interface](https://gist.github.com/sgillies/2217756)
@@ -381,3 +391,27 @@ https://github.com/JuliaGeometry/GeometryTypes.jl/pull/166#issuecomment-46095907
 https://github.com/JuliaGeometry/GeometryTypes.jl/pull/166#issuecomment-460484813
 https://github.com/JuliaData/DBFTables.jl/pull/9
 https://github.com/visr/GeoJSONTables.jl and https://github.com/JuliaGeo/Shapefile.jl/pull/33
+
+
+
+
+
+# A few more random thougths
+
+From <https://github.com/JuliaGeometry/GeometryTypes.jl/pull/166#issuecomment-460959072>
+
+>  The advantage of abstract interfaces is that it allows you to have different types and still code to them under the same logic. This is extremely useful if you need to have different types. While abstractions are a lot easier to agree on and implement throughout the ecosystem, it also comes at the cost of unclarity. Say I load a shapefile with Shapefiles which is just julia Vectors of Points, and one with GDAL which wraps a pointer to a GDAL object, then uses LibgGEOS to intersect them - what type of Polygon should I then have? Do I end up with a mix of pure-Julia objects and C pointers etc in my workspace? And how many implicit copies happened by conversion in the process? (Let me know if I misunderstand any of the relationships here).
+
+> To be clear what I suggest is having both - i.e. to have an abstract interface, but also attempt to use the same concrete types where possible.
+
+What is our blessed type? WKB, GeometryBasics or something else? Perhaps best to leave out of this RFC, but it may be good to agree on a preferred one.
+
+TODO: Try out passing pointers to Julia WKB struct to GEOS and see if operations work without conversion?
+
+From https://github.com/JuliaGeometry/GeometryTypes.jl/pull/166#issuecomment-461050487
+
+> So packages that are free in their types can use the concrete implementations, and C libraries with weird stuff happening should define the interface & some conversion functions to make interop seamless, but also make it easy to directly work with the c-types (or especially C++).
+
+A possible issue with WKB:
+
+https://github.com/bjornharrtell/flatgeobuf#why-not-use-wkb-geometry-encoding

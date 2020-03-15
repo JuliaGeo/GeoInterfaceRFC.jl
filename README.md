@@ -15,7 +15,7 @@
 
 # Abstract
 This document describe a set of traits based on the [simple features standard](https://www.opengeospatial.org/standards/sfa)
-for geospatial vector data.
+for geospatial vector data. Intended to replace the existing [GeoInterface.jl](https://github.com/JuliaGeo/GeoInterface.jl).
 
 # Proposal
 GeoInterface provides

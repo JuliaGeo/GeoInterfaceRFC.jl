@@ -83,5 +83,6 @@ crs(geom::T) where T = missing  # or conforming to <:CoordinateReferenceSystemFo
 
 include("defaults.jl")
 include("primitives.jl")
+include("box.jl")
 
 end # module

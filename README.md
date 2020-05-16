@@ -131,37 +131,37 @@ of GeoInterface methods should still be legal.
 Here's a mock-up of an implementation:
 ```julia
 # All Geometries
-GeoInterface.ncoord(geom::Any) =
+GeoInterface.ncoord(geom) =
     GeoInterface.ncoord(GeoInterface.geomtype(geom), geom)
 # Point
-GeoInterface.getcoord(geom::Any, i::Integer) =
+GeoInterface.getcoord(geom, i::Integer) =
     GeoInterface.getcoord(GeoInterface.geomtype(geom), geom, i)
 # LineString, MultiPoint
-GeoInterface.npoint(geom::Any) =
+GeoInterface.npoint(geom) =
     GeoInterface.npoint(GeoInterface.geomtype(geom), geom)
-GeoInterface.getpoint(geom::Any, i::Integer) =
+GeoInterface.getpoint(geom, i::Integer) =
     GeoInterface.getpoint(GeoInterface.geomtype(geom), geom, i)
 # Polygon
-GeoInterface.getexterior(geom::Any) =
+GeoInterface.getexterior(geom) =
     GeoInterface.getexterior(GeoInterface.geomtype(geom), geom)
-GeoInterface.nhole(geom::Any) =
+GeoInterface.nhole(geom) =
     GeoInterface.nhole(GeoInterface.geomtype(geom), geom)
-GeoInterface.gethole(geom::Any, i::Integer) =
+GeoInterface.gethole(geom, i::Integer) =
     GeoInterface.gethole(GeoInterface.geomtype(geom), geom, i)
 # GeometryCollection
-GeoInterface.ngeom(geom::Any) =
+GeoInterface.ngeom(geom) =
     GeoInterface.ngeom(GeoInterface.geomtype(geom), geom)
-GeoInterface.getgeom(geom::Any, i::Integer) =
+GeoInterface.getgeom(geom, i::Integer) =
     GeoInterface.getgeom(GeoInterface.geomtype(geom), geom, i)
 # MultiLineString
-GeoInterface.nlinestring(geom::Any) =
+GeoInterface.nlinestring(geom) =
     GeoInterface.nlinestring(GeoInterface.geomtype(geom), geom)
-GeoInterface.getlinestring(geom::Any, i::Integer) =
+GeoInterface.getlinestring(geom, i::Integer) =
     GeoInterface.getlinestring(GeoInterface.geomtype(geom), geom, i)
 # MultiPolygon
-GeoInterface.npolygon(geom::Any) =
+GeoInterface.npolygon(geom) =
     GeoInterface.npolygon(GeoInterface.geomtype(geom), geom)
-GeoInterface.getpolygon(geom::Any, i::Integer) =
+GeoInterface.getpolygon(geom, i::Integer) =
     GeoInterface.getpolygon(GeoInterface.geomtype(geom), geom, i)
 ```
 

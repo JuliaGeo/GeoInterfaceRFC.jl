@@ -36,49 +36,49 @@ abstract type AbstractGeometryCollection <: AbstractGeometry end
 struct GeometryCollection <: AbstractGeometryCollection end
 
 # All Geometries
-function geomtype(x::T) where T
+function geomtype(geom)
     throw(ErrorException(string("Unknown Geometry type. ",
     "Define GeoInterface.geomtype(::$(typeof(x))) to return the desired type.")))
 end
 
 # All types
-ncoord(geom::T) where T = ncoord(geomtype(T), geom)
-isempty(geom::T) where T = ncoord(geom) == 0 # TODO or ngeom?
-issimple(geom::T) where T = issimple(geomtype(T), geom)
+ncoord(geom) = ncoord(geomtype(geom), geom)
+isempty(geom) = ncoord(geom) == 0 # TODO or ngeom?
+issimple(geom) = issimple(geomtype(geom), geom)
 
 # Point
-getcoord(geom::T, i::Integer) where T = getcoord(geomtype(T), geom, i)
+getcoord(geom, i::Integer) = getcoord(geomtype(geom), geom, i)
 
 # LineString, MultiPoint
-npoint(geom::T) where T = npoint(geomtype(T), geom)
-getpoint(geom::T, i::Integer) where T = getpoint(geomtype(T), geom, i)
+npoint(geom) = npoint(geomtype(geom), geom)
+getpoint(geom, i::Integer) = getpoint(geomtype(geom), geom, i)
 # LineString
-isclosed(geom::T) where T = isclosed(geomtype(T), geom)
-isring(geom::T) where T = isclosed(geom) && issimple(geom)
+isclosed(geom) = isclosed(geomtype(geom), geom)
+isring(geom) = isclosed(geom) && issimple(geom)
 
 # Polygon/Triangle
-getexterior(geom::T) where T = getexterior(geomtype(T), geom)
-nhole(geom::T) where T = nhole(geomtype(T), geom)  # TODO shouldn't this be interior? doesn't have to be a hole
-gethole(geom::T, i::Integer) where T = gethole(geomtype(T), geom, i)
+getexterior(geom) = getexterior(geomtype(geom), geom)
+nhole(geom) = nhole(geomtype(geom), geom)  # TODO shouldn't this be interior? doesn't have to be a hole
+gethole(geom, i::Integer) = gethole(geomtype(geom), geom, i)
 
 # PolyHedralSurface
-npatch(geom::T) where T = npatch(geomtype(T), geom)
-getpatch(geom::T, i::Integer) where T = getpatch(geomtype(T), geom, i)
+npatch(geom) = npatch(geomtype(geom), geom)
+getpatch(geom, i::Integer) = getpatch(geomtype(geom), geom, i)
 
 # GeometryCollection
-ngeom(geom::T) where T = ngeom(geomtype(T), geom)
-getgeom(geom::T, i::Integer) where T = getgeom(geomtype(T), geom, i)
+ngeom(geom) = ngeom(geomtype(geom), geom)
+getgeom(geom, i::Integer) = getgeom(geomtype(geom), geom, i)
 
 # MultiLineString
-nlinestring(geom::T) where T = nlinestring(geomtype(T), geom)
-getlinestring(geom::T, i::Integer) where T = getlinestring(geomtype(T), geom, i)
+nlinestring(geom) = nlinestring(geomtype(geom), geom)
+getlinestring(geom, i::Integer) = getlinestring(geomtype(geom), geom, i)
 
 # MultiPolygon
-npolygon(geom::T) where T = npolygon(geomtype(T), geom)
-getpolygon(geom::T, i::Integer) where T = getpolygon(geomtype(T), geom, i)
+npolygon(geom) = npolygon(geomtype(geom), geom)
+getpolygon(geom, i::Integer) = getpolygon(geomtype(geom), geom, i)
 
 # Other methods
-crs(geom::T) where T = missing  # or conforming to <:CoordinateReferenceSystemFormat in GeoFormatTypes
+crs(geom) = missing  # or conforming to <:CoordinateReferenceSystemFormat in GeoFormatTypes
 
 
 include("defaults.jl")

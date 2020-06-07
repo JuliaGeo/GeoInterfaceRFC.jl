@@ -1,9 +1,9 @@
 const Indexable = Union{AbstractVector,Tuple}
 
 # Point
-geomtype(geom::AbstractVector{T}) where {T<:Real} = Point()
-geomtype(geom::Tuple{T,U}) where {T,U<:Real} = Point()
-geomtype(geom::Tuple{T,U,V}) where {T,U,V<:Real} = Point()
+geomtype(::AbstractVector{T}) where {T <: Real} = Point()
+geomtype(::Tuple{T,U}) where {T,U <: Real} = Point()
+geomtype(::Tuple{T,U,V}) where {T,U,V <: Real} = Point()
 ncoord(::AbstractPoint, geom::Indexable) = length(geom)
 getcoord(::AbstractPoint, geom::Indexable, i::Integer) = geom[i]
 
@@ -18,7 +18,7 @@ ncoord(::AbstractPolygon, geom::Indexable) =
     ncoord(LineString, getexterior(geom))
 getexterior(::AbstractPolygon, geom::Indexable) = geom[1]
 nhole(::AbstractPolygon, geom::Indexable) = length(geom) - 1
-gethole(::AbstractPolygon, geom::Indexable, i::Integer) = geom[i+1]
+gethole(::AbstractPolygon, geom::Indexable, i::Integer) = geom[i + 1]
 
 # MultiPoint
 ncoord(::AbstractMultiPoint, geom::Indexable) =
@@ -40,8 +40,8 @@ npolygon(::AbstractMultiPolygon, geom::Indexable) = length(geom)
 getpolygon(::AbstractMultiPolygon, geom::Indexable, i::Integer) = geom[i]
 
 # GeometryCollection
-ncoord(::AbstractGeometryCollection, collection::Indexable) =
-    ncoord(geomtype(geom), getgeom(collection, 1))
+ncoord(::AbstractGeometryCollection, geom::Indexable) =
+    ncoord(geomtype(geom), getgeom(geom, 1))
 ngeom(::AbstractGeometryCollection, collection::Indexable) =
     length(collection)
 getgeom(::AbstractGeometryCollection, collection::Indexable, i::Integer) =

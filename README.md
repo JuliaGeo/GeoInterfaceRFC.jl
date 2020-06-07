@@ -5,7 +5,7 @@
 * **Created**: October 2019
 * **Status**: **Draft** | In Review | Work In Progress | Completed
 * **Review Requested**:
-    - [ ] evetion
+    - [x] evetion
     - [ ] meggart
     - [ ] rafaqz
     - [ ] mkborregaard
@@ -14,13 +14,19 @@
     - [ ] asinghvi17
 
 # Abstract
-This document describe a set of traits based on the [simple features standard](https://www.opengeospatial.org/standards/sfa)
-for geospatial vector data. Intended to replace the existing [GeoInterface.jl](https://github.com/JuliaGeo/GeoInterface.jl).
+This document describe a set of traits based on the [Simple Features standard (SF)](https://www.opengeospatial.org/standards/sfa)
+for geospatial vector data, including the SQL/MM extension with support for circular geometry. While we try to adhere to SF, there are changes and extensions to make it more Julian.
+
+This package won't support WKB/WKT or spatial operations (DE-9IM) as it aims to interface between existing packages with that functionality.
+
+Intended to replace the existing [GeoInterface.jl](https://github.com/JuliaGeo/GeoInterface.jl). 
 
 # Proposal
 GeoInterface provides
 (a) a set of functions:
 ```julia
+geomtype(geom)
+
 getexterior(geom)
 getcoord(geom, i)
 getgeom(geom, i)
@@ -36,8 +42,9 @@ nlinestring(geom)
 npoint(geom)
 npolygon(geom)
 
-wellknowntext(geom)
-wellknownbinary(geom)
+isempty(geom)
+issimple(geom)
+isclosed(geom)
 ```
 
 (b) a set of types for dispatching on the functions. The types tells GeoInterface
@@ -52,9 +59,11 @@ MultiPoint <: Geometry,
 MultiLineString <: Geometry,
 MultiPolygon <: Geometry,
 GeometryCollection <: Geometry
+...
 ```
 
 > What do we do with the null geometries / missing geometries?
+We could define `empty` geometries (no vertices), it is actually in the SF spec, hence the is_empty method.
 
 (c) implementation for AbstractVectors and Tuples
 
@@ -364,7 +373,7 @@ Those might be more appropriate for potential packages such as "GeoTables.jl" (s
 
 # Affected Packages
 * **That should implement it**: `Shapefile`, `GeoJSON`, `ArchGDAL`, `GeometryBasics`, `LibGEOS`, `GeometryTypes`
-* **That might use it**: `GeoMakie`, `Turf` (?), `GeoTables` (?)
+* **That might use it**: `GeoMakie`, `Turf` (?), `GeoTables` (?), `MeshCore`, `GeoStats`.
 
 # Some Alternatives Considered
 

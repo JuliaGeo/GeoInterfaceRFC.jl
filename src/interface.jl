@@ -1,4 +1,5 @@
 # All Geometries
+"""Returns the geometry type, such as `Polygon` or `Point`."""
 function geomtype(geom)
     throw(ErrorException(string("Unknown Geometry type. ",
     "Define GeoInterface.geomtype(::$(typeof(geom))) to return the desired type.")))
@@ -22,22 +23,37 @@ getcoord(geom, i::Integer) = getcoord(geomtype(geom), geom, i)
 npoint(geom) = npoint(geomtype(geom), geom)
 getpoint(geom, i::Integer) = getpoint(geomtype(geom), geom, i)
 
-# LineString
+# Curve
+startpoint(geom)
+endpoint(geom)
 isclosed(geom) = isclosed(geomtype(geom), geom)
 isring(geom) = isclosed(geom) && issimple(geom)
 length(geom) = length(geomtype(geom), geom)
+
+# Surface
+area(geom)
+centroid(geom)
+pointonsurface(geom)
+boundary()
 
 # Polygon/Triangle
 nring(geom) # TODO If this is more than one, it has interior rings (holes)
 getring(geom)
 
+"""Returns the exterior ring of this Polygon as a `LineString`."""
 getexterior(geom) = getexterior(geomtype(geom), geom)  # getring(geom, 1)
-nhole(geom) = nhole(geomtype(geom), geom)  # nrings - 1
+"""Returns the number of interior rings in this Polygon."""
+nhole(geom)::Integer = nhole(geomtype(geom), geom)  # nrings - 1
+"""Returns the Nth interior ring for this Polygon as a `LineString`."""
 gethole(geom, i::Integer) = gethole(geomtype(geom), geom, i)  # getring + 1
 
 # PolyHedralSurface
-npatch(geom) = npatch(geomtype(geom), geom)
+"""Returns the number of including polygons."""
+npatch(geom)::Integer = npatch(geomtype(geom), geom)
+"""Returns a polygon in this surface, the order is arbitrary."""
 getpatch(geom, i::Integer) = getpatch(geomtype(geom), geom, i)
+"""Returns the collection of polygons in this surface that bounds the given polygon “p” for any polygon “p” in the surface."""
+boundingpolygons()
 
 # GeometryCollection
 ngeom(geom) = ngeom(geomtype(geom), geom)

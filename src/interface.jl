@@ -6,8 +6,10 @@ function geomtype(geom)
 end
 
 # All types
-"""`ncoord(geom) -> Integer`
-Return the number of coordinate dimensions (such as XYZ) for the geometry.````
+"""
+    ncoord(geom) -> Integer
+
+Return the number of coordinate dimensions (such as XYZ) for the geometry.
 """
 ncoord(geom) = ncoord(geomtype(geom), geom)
 
@@ -24,21 +26,21 @@ npoint(geom) = npoint(geomtype(geom), geom)
 getpoint(geom, i::Integer) = getpoint(geomtype(geom), geom, i)
 
 # Curve
-startpoint(geom)
-endpoint(geom)
+startpoint(geom) = getpoint(geom, 1)
 isclosed(geom) = isclosed(geomtype(geom), geom)
 isring(geom) = isclosed(geom) && issimple(geom)
 length(geom) = length(geomtype(geom), geom)
+endpoint(geom) = getcoord(geom, length(geom))
 
 # Surface
-area(geom)
-centroid(geom)
-pointonsurface(geom)
-boundary()
+area(geom) = area(geomtype(geom), geom)
+centroid(geom) = centroid(geomtype(geom), geom)
+pointonsurface(geom) = pointonsurface(geomtype(geom), geom)
+boundary(geom) = boundary(geomtype(geom), geom)
 
 # Polygon/Triangle
-nring(geom) # TODO If this is more than one, it has interior rings (holes)
-getring(geom)
+nring(geom) = nring(geomtype(geom), geom) # TODO If this is more than one, it has interior rings (holes)
+getring(geom) = getring(geomtype(geom), geom)
 
 """Returns the exterior ring of this Polygon as a `LineString`."""
 getexterior(geom) = getexterior(geomtype(geom), geom)  # getring(geom, 1)
@@ -83,7 +85,5 @@ contains(a, b)::Bool = contains(geomtype(a), geomtype(b), a, b)
 relate(a, b)::Bool = relate(geomtype(a), geomtype(b), a, b)
 
 # Set theory
-boundary(geom)
-centroid(geom)
-difference(a, b, inverse = false)
-intersection(a, b, inverse = false)
+difference(a, b, inverse=false) = difference(geomtype(a), geomtype(b), a, b, inverse)
+intersection(a, b, inverse=false) = intersection(geomtype(a), geomtype(b), a, b, inverse)

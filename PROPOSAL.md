@@ -1,9 +1,9 @@
 # GeoInterface v1.0 RFC
 
 * **Title**: An Interface for Geospatial Geometries in Julia
-* **Authors**: Martijn Visser (mgvisser@gmail.com) and Yeesian Ng (ngyeesian@gmail.com)
+* **Authors**: Martijn Visser (mgvisser@gmail.com), Yeesian Ng (ngyeesian@gmail.com) and Maarten Pronk (git@evetion.nl)
 * **Created**: October 2019
-* **Status**: **Draft** | In Review | Work In Progress | Completed
+* **Status**: In Review | **Work In Progress** | Completed
 * **Review Requested**:
     - [x] evetion
     - [ ] meggart

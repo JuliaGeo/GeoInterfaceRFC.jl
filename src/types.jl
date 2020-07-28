@@ -1,6 +1,10 @@
 abstract type AbstractGeometry end
-"""The overcoupling `Geometry` type."""
-struct Geometry <: AbstractGeometry end
+# """The general `Geometry` type."""
+# struct Geometry <: AbstractGeometry end  # commented out as it won't be used directly
+
+abstract type AbstractGeometryCollection <: AbstractGeometry end
+"""A `GeometryCollection` is a collection of `Geometry`s."""
+struct GeometryCollection <: AbstractGeometryCollection end
 
 abstract type AbstractPoint <: AbstractGeometry end
 """A simple `Point`."""
@@ -9,14 +13,14 @@ struct Point <: AbstractPoint end
 abstract type AbstractCurve <: AbstractGeometry end
 abstract type AbstractLineString <: AbstractCurve end
 """A `LineString` is a collection of straight lines between its `Point`s."""
-struct LineString <: AbstractCurve end
+struct LineString <: AbstractLineString end
 """A Line is `LineString` with just two points."""
-struct Line <: LineString end
+struct Line <: AbstractLineString end
 """A LinearRing is a `LineString` with the same begin and endpoint."""
-struct LinearRing <: LineString end
+struct LinearRing <: AbstractLineString end
 
-"""A `CircularString` is a curve, with an odd number of points. 
-A single segment consists of three points, where the first and last are the beginning and end, 
+"""A `CircularString` is a curve, with an odd number of points.
+A single segment consists of three points, where the first and last are the beginning and end,
 while the second is halfway the curve."""
 struct CircularString <: AbstractCurve end
 """A `CompoundCurve` is a curve that combines straight `LineString`s and curved `CircularString`s."""
@@ -47,22 +51,18 @@ struct PolyHedralSurface <: AbstractPolyHedralSurface end
 """A `TIN` is a `PolyHedralSurface` consisting of `Triangle`s."""
 struct TIN <: AbstractPolyHedralSurface end  # Surface consisting of Triangles
 
-abstract type AbstractMultiPoint <: AbstractGeometry end
+abstract type AbstractMultiPoint <: AbstractGeometryCollection end
 """A `MultiPoint` is a collection of `Point`s."""
 struct MultiPoint <: AbstractMultiPoint end
 
-abstract type AbstractMultiCurve <: AbstractGeometry end
-"""A `MultiCurve` is a collection of `Curve`s.""" 
+abstract type AbstractMultiCurve <: AbstractGeometryCollection end
+"""A `MultiCurve` is a collection of `Curve`s."""
 struct MultiCurve <: AbstractMultiCurve end
 abstract type AbstractMultiLineString <: AbstractMultiCurve end
 """A `MultiPoint` is a collection of `Point`s."""
 struct MultiLineString <: AbstractMultiLineString end
 
-abstract type AbstractMultiSurface <: AbstractGeometry end
+abstract type AbstractMultiSurface <: AbstractGeometryCollection end
 abstract type AbstractMultiPolygon <: AbstractMultiSurface end
 """A `MultiPolygon` is a collection of `Polygon`s."""
 struct MultiPolygon <: AbstractMultiPolygon end
-
-abstract type AbstractGeometryCollection <: AbstractGeometry end
-"""A `GeometryCollection` is a collection of `Geometry`s."""
-struct GeometryCollection <: AbstractGeometryCollection end

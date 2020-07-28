@@ -105,7 +105,7 @@ GeoInterface.getcoord(geom, i)::Real  # for Points
 GeoInterface.ngeom(geom)::Integer
 GeoInterface.getgeom(geom, i)  # geomtype -> GeoInterface.Y
 ```
-Where the `getgeom` could be an iterator (without the i) as well. It will return a new geom with the correct `geomtype`.
+Where the `getgeom` could be an iterator (without the i) as well. It will return a new geom with the correct `geomtype`. The `ngeom` and `getgeom` are aliases for their geom specific counterparts, such as `npoints` and `getpoint` for LineStrings.
 
 There are also optional generic methods that could help or speed up operations:
 ```julia
@@ -175,6 +175,11 @@ GeoInterface.geomtype(multipolygon) = GeoInterface.MultiPolygon()
 GeoInterface.ncoord(multipolygon)::Integer
 GeoInterface.npolygon(multipolygon)::Integer
 GeoInterface.getpolygon(multipolygon, i)::"Polygon"
+```
+A collection of geom with "GeometryCollection"-like traits has to implement the following methods:
+```julia
+GeoInterface.ngeom(GeoInterface.LineString, geoms)::Integer
+GeoInterface.getgeom(GeoInterface.LineString, geoms, i)
 ```
 
 ### Testing the interface

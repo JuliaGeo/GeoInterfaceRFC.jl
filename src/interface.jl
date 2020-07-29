@@ -85,5 +85,7 @@ contains(a, b)::Bool = contains(geomtype(a), geomtype(b), a, b)
 relate(a, b)::Bool = relate(geomtype(a), geomtype(b), a, b)
 
 # Set theory
+symdifference(a, b) = difference(geomtype(a), geomtype(b), a, b)
 difference(a, b, inverse=false) = difference(geomtype(a), geomtype(b), a, b, inverse)
 intersection(a, b, inverse=false) = intersection(geomtype(a), geomtype(b), a, b, inverse)
+union(a, b) = union(geomtype(a), geomtype(b), a, b)

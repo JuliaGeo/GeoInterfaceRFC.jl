@@ -1,5 +1,6 @@
 # Defaults for many of the interface functions are defined here as fallback.
 
+## Coords
 # Four options in SF, xy, xyz, xym, xyzm
 const default_coord_names = (:X, :Y, :Z, :M)
 
@@ -10,14 +11,22 @@ y(geom) = getcoord(geom, findfirst(coordnames(geom), :Y))
 z(geom) = getcoord(geom, findfirst(coordnames(geom), :Z))
 m(geom) = getcoord(geom, findfirst(coordnames(geom), :M))
 
+## Points
 npoint(c::AbstractCurve, geom) = ngeom(c, geom)
 getpoint(c::AbstractCurve, geom, i) = getgeom(c, geom, i)
 
+## Polygons
 nring(p::AbstractPolygon, geom) = ngeom(p, geom)
 getring(p::AbstractPolygon, geom, i) = getgeom(p, geom, i)
 getexterior(p::AbstractPolygon, geom) = getring(p, geom, 1)
 nhole(p::AbstractPolygon, geom) = nring(p, geom) - 1
 gethole(p::AbstractPolygon, geom, i) = getring(p, geom, i + 1)
+
+nlinestring(::AbstractMultiLineString, geom) = ngeom(p, geom)
+nlinestring(::AbstractMultiLineString, geom, i) = getgeom(p, geom, i)
+
+npolygon(::AbstractMultiPolygon, geom) = ngeom(p, geom)
+getpolygon(::AbstractMultiPolygon, geom, i) = getgeom(p, geom, i)
 
 npoint(::Line, _) = 2
 npoint(::Triangle, _) = 3

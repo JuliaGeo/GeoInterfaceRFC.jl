@@ -1,6 +1,7 @@
+struct MyCurve end
+
 @testset "Primitives" begin
     # Implement interface
-    struct MyCurve end
     GeoInterfaceRFC.geomtype(::MyCurve) = GeoInterfaceRFC.LineString()
     GeoInterfaceRFC.ncoord(::GeoInterfaceRFC.LineString, geom::MyCurve) = 2
     GeoInterfaceRFC.ngeom(::GeoInterfaceRFC.LineString, geom::MyCurve) = 2

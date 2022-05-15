@@ -1,3 +1,6 @@
+*Note: this unregistered package served as a draft to redesign Julia's GeoInterface.
+Follow https://github.com/JuliaGeo/GeoInterface.jl for all current developments.*
+
 # GeoInterfaceRFC
 An interface for geospatial vector data in Julia
 
